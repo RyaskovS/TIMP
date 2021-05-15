@@ -96,8 +96,8 @@ inline wstring modAlphaCipher::getValidOpenText(const wstring & s)
                 tmp.push_back(c);
         }
     }
-    for (long unsigned int i=0; i<s.size(); i++) {
-        if (numAlpha.find(s[i])==string::npos) {
+    for (long unsigned int i=0; i<tmp.size(); i++) {
+        if (numAlpha.find(tmp[i])==string::npos) {
             throw cipher_error(string("Invalid open text"));
             }
     }
