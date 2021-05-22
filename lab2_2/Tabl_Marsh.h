@@ -14,4 +14,5 @@ public:
     Tabl_Marsh(int& skey);
     wstring encrypt(const wstring& open_text);
     wstring decrypt(const wstring& cipher_text);
+    void Check(int skey);
 };
