@@ -6,6 +6,9 @@ Tabl_Marsh::Tabl_Marsh(int& skey )
 }
 wstring Tabl_Marsh::encrypt(const wstring& open_text)
 {
+    if (open_text.size()==0) {
+        throw invalid_argument("Empty text");
+    }
     wstring shifr;
     int raws;
     int len=open_text.size();
@@ -42,6 +45,9 @@ wstring Tabl_Marsh::encrypt(const wstring& open_text)
 }
 wstring Tabl_Marsh::decrypt(const wstring& cipher_text)
 {
+    if (cipher_text.size()==0) {
+    throw invalid_argument("Empty text");
+    }
     wstring text=cipher_text;
     wstring norm_text;
     int raws,prob;
@@ -85,3 +91,9 @@ wstring Tabl_Marsh::decrypt(const wstring& cipher_text)
     delete []Matrica;
     return norm_text;
 }
+void Tabl_Marsh::Check(int skey){
+    if(((wcin.fail())or(skey<=0))or(wcin.get() != '\n')) {
+    throw invalid_argument("Must be a positive integer number");
+    }
+}
+
