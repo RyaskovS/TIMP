@@ -10,7 +10,7 @@ private:
     wstring EngAlph=L"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     wstring RusAlph=L"АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
 public:
-    Tabl_Marsh()=delete;
+    Tabl_Marsh(){};
     Tabl_Marsh(int& skey);
     wstring encrypt(const wstring& open_text);
     wstring decrypt(const wstring& cipher_text);
