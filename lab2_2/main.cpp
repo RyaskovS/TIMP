@@ -14,8 +14,7 @@ int main()
     wcout<<L"Введите ключ(кол-во столбцов): ";
     wcin>>st;
     try {
-        if(((wcin.fail())or(st<=0))or(wcin.get() != '\n')) {
-            throw invalid_argument("Must be a positive integer number");
+        Tabl_Marsh().Check(st);
         }
     } catch (const invalid_argument& ia) {
         wcerr<<L"Error: "<<ia.what()<<endl;
