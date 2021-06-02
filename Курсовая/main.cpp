@@ -7,8 +7,9 @@ int main(int argc, char **argv)
     cout<<"Введите режим работы(1 - Обычный, 2 - Инверсированный: ";
     cin>>mode;
     StegProb Steg(mode);
-    try {Steg.CheckKey();
-    } catch (const invalid_argument& ia){
+    try {
+        Steg.CheckKey();
+    } catch (const invalid_argument& ia) {
         cerr<<"Error: "<<ia.what()<<endl;;
         return 10;
     }
@@ -59,15 +60,20 @@ int main(int argc, char **argv)
             }
             cout<<"Введите название файла(или полный путь), в котором будет находится информация, которую достали: ";
             getline(cin,hidden);
-            Steg.getInfo(cont,hidden);
+            try {
+                Steg.getInfo(cont,hidden);
+            } catch (const invalid_argument& ia) {
+                cerr<<"Error: "<<ia.what()<<endl;
+                return 7;
+            }
             cout<<"Информация сохранена в файле "<<hidden<<endl;
         }
-        if(ex==3){
+        if(ex==3) {
             Steg.getHelp();
-        }
-        else if (ex==0) {
+        } else if (ex==0) {
             break;
         }
     }
     return 0;
 }
+
