@@ -10,12 +10,15 @@ void::StegProb::hideInfo(const string& hide_path,const string& cont_path)
     fstream hide;
     hide.open(hide_path, ios_base::in);
     fstream cont;
-   cont.open(cont_path, ios_base::in|ios_base::out);
+    cont.open(cont_path, ios_base::in|ios_base::out);
     getline(hide,stroka,'\0');
-    for (long unsigned int i=0;i<stroka.size();i++){
-        if (stroka[i]=='\n'){
+    for (long unsigned int i=0; i<stroka.size(); i++) {
+        if (stroka[i]=='\n') {
             stroka.erase(i);
         }
+    }
+    if (stroka=="") {
+        throw invalid_argument("Файл со скрываемым сообщением пуст");
     }
     hide.close();
     getline(cont,text,'\0');
@@ -25,9 +28,15 @@ void::StegProb::hideInfo(const string& hide_path,const string& cont_path)
     for (long unsigned int i=0; i<text.size(); i++) {
         if (text[i]==' ') {
             space++;
+            if (text[i+1]==' ') {
+                throw invalid_argument("Неподходящий файл-контейнер");
+            }
         }
     }
-    if (space!=8*stroka.size()){
+    if (text=="") {
+        throw invalid_argument("Файл-контейнер пуст");
+    }
+    if (space!=8*stroka.size()) {
         throw invalid_argument("Количество пробелов в контейнере не подходит для скрытия сообщения");
     }
     unsigned char chislo=0b00000000;
@@ -36,14 +45,14 @@ void::StegProb::hideInfo(const string& hide_path,const string& cont_path)
     unsigned char edinica=0b10000000;
     unsigned char zero=0b00000000;
     unsigned char buf;
-    if (mode==2){
+    if (mode==2) {
         buf=edinica;
         edinica=zero;
         zero=buf;
     }
     hide.open(hide_path, ios_base::in|ios::binary);
     while(hide.read(reinterpret_cast<char*>(&chislo),sizeof(unsigned char))) {
-        if (chislo!=0b00001010) {
+        if (chislo!='\n') {
             for (int i=0; i<8; i++) {
                 newchislo=chislo&0b10000000;
                 digit<<=1;
@@ -76,6 +85,9 @@ void::StegProb::getInfo(const string& cont_path,const string& hidden_path)
     cont.open(cont_path, ios_base::in);
     hidden.open(hidden_path,ios_base::out|ios_base::binary);
     getline(cont,text,'\0');
+    if (text=="") {
+        throw invalid_argument("Файл со скрытой информацией пуст");
+    }
     int space=0;
     cont.close();
     unsigned char chislo=0b00000000;
@@ -95,7 +107,7 @@ void::StegProb::getInfo(const string& cont_path,const string& hidden_path)
     unsigned char edinica=0b00000001;
     unsigned char zero=0b00000000;
     unsigned char buf;
-    if (mode==2){
+    if (mode==2) {
         buf=edinica;
         edinica=zero;
         zero=buf;
@@ -116,18 +128,23 @@ void::StegProb::getInfo(const string& cont_path,const string& hidden_path)
     }
     hidden.close();
 }
-void::StegProb::CheckFile(const string& path){
+void::StegProb::CheckFile(const string& path)
+{
     ifstream file;
     file.exceptions(ifstream::badbit|ifstream::failbit);
     file.open(path);
+    file.exceptions(ifstream::goodbit);
     file.close();
 }
-void::StegProb::CheckKey(){
+bool::StegProb::CheckKey()
+{
     if (((mode!=1)and(mode!=2))or(cin.fail())or(cin.get() != '\n')) {
         throw invalid_argument ("Неправильно введён ключ");
     }
+    return true;
 }
-void::StegProb::getHelp(){
+void::StegProb::getHelp()
+{
     cout<<"Данная программа предназначена для стеганографии методом двойных пробелов. Два пробела - 1, один пробел - 0(в инверсированном режиме наоборот)"<<endl;
     cout<<"Таким образом, получаемое сообщение, которое необходимо скрыть, преобразовывается в двоичный код и записывается в файле-контейнере."<<endl;
     cout<<"При получении информации из файла-контейнера, считываются все пробелы, и в зависимости от режима работы записывается сообщение скрытой в файле-контейнер"<<endl;
